@@ -52,6 +52,9 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,8 +74,11 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Text("GEt"),
-          onPressed: () {},
+          child: Text("getToken"),
+          onPressed: () {
+
+            _flutterUmpush.getToken();
+          },
         ),
       ),
     );

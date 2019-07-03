@@ -42,7 +42,7 @@ public class FlutterUmpushPlugin
                 channel.invokeMethod("onToken", token, new Result() {
                     @Override
                     public void success(Object o) {
-                        UmengApplication.savePushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN, null);
+                        //UmengApplication.savePushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN, null);
                     }
 
                     @Override
@@ -78,8 +78,9 @@ public class FlutterUmpushPlugin
                 });
             }
             result.success(null);
-        } else if ("test".equals(call.method)) {
-            channel.invokeMethod("onMessage", "hello");
+        } else if ("getToken".equals(call.method)) {
+            String token = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN);
+            channel.invokeMethod("onGetToken", token);
             result.success(null);
         } else {
             result.notImplemented();

@@ -46,6 +46,7 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
     public static final MethodChannel.Result FLUTTER_METHOD_CALLBACK = new MethodChannel.Result() {
         @Override
         public void success(Object o) {
+
             Log.i(TAG, "call flutter result: " + o.toString());
         }
 
@@ -138,15 +139,14 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
             }
         };
         pushAgent.setNotificationClickHandler(notificationClickHandler);
-        pushAgent.register(new
-
-                                   IUmengRegisterCallback() {
+        pushAgent.register(new IUmengRegisterCallback() {
                                        @Override
                                        public void onSuccess(String deviceToken) {
                                            Log.i(TAG, "device token: " + deviceToken);
                                            if (FlutterUmpushPlugin.instance != null) {
                                                //Flutter插件已经初始化完成，可以直接调用
                                                FlutterUmpushPlugin.instance.channel.invokeMethod("onToken", deviceToken, FLUTTER_METHOD_CALLBACK);
+                                               UmengApplication.savePushData(getApplicationContext(), UMENG_PUSH_DEVICE_TOKEN, deviceToken);
                                            } else { //Flutter尚未初始化（主要原因是使用小米、华为、魅族的离线唤醒方式初始化的，首先执行的的UmengOtherPushActivity）
                                                //缓存
                                                UmengApplication.savePushData(getApplicationContext(), UMENG_PUSH_DEVICE_TOKEN, deviceToken);

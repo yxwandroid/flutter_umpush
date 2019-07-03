@@ -39,9 +39,11 @@ class FlutterUmpush {
     _channel.invokeMethod('configure');
   }
 
-  void test() {
-    _channel.invokeMethod('test');
+  void getToken() {
+    _channel.invokeMethod("getToken");
   }
+
+
 
   Future<Null> _handleMethod(MethodCall call) async {
     switch (call.method) {
@@ -65,6 +67,12 @@ class FlutterUmpush {
         print('FlutterUmpush onResume: $message');
         _onResume(call.arguments.cast<String>());
         return null;
+      case "onGetToken":
+        final String message = call.arguments;
+        print('FlutterUmpush onGetToken: $message');
+        _onToken(call.arguments.cast<String>());
+        return null;
+
       default:
         throw new UnsupportedError("Unrecognized JSON message");
     }
