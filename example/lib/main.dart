@@ -76,8 +76,7 @@ class _MyAppState extends State<MyApp> {
         floatingActionButton: FloatingActionButton(
           child: Text("getToken"),
           onPressed: () {
-
-            _flutterUmpush.getToken();
+            _flutterUmpush.getToken("wilson");
           },
         ),
       ),

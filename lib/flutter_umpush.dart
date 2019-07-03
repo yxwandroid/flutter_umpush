@@ -39,12 +39,15 @@ class FlutterUmpush {
     _channel.invokeMethod('configure');
   }
 
-  void getToken() {
-    _channel.invokeMethod("getToken");
+
+
+  ///Flutter和原生通信
+  void getToken(String  useName) {
+    _channel.invokeMethod("getToken",{"useName":useName});
   }
 
 
-
+   ///原生回调到Flutter
   Future<Null> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case "onToken":
@@ -70,7 +73,7 @@ class FlutterUmpush {
       case "onGetToken":
         final String message = call.arguments;
         print('FlutterUmpush onGetToken: $message');
-        _onToken(call.arguments.cast<String>());
+        _onToken(message);
         return null;
 
       default:

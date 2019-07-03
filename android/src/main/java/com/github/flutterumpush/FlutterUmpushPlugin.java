@@ -2,6 +2,9 @@ package com.github.flutterumpush;
 
 import android.util.Log;
 
+import com.umeng.message.PushAgent;
+import com.umeng.message.UTrack;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -37,25 +40,25 @@ public class FlutterUmpushPlugin
             // 调用configure函数时，才执行onToken或onMessage回调
 
             //查看缓存是否存在Token，存在在执行Flutter的回调函数onToken，通知flutter进行更新
-            String token = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN);
-            if (token != null && !token.equals("")) {
-                channel.invokeMethod("onToken", token, new Result() {
-                    @Override
-                    public void success(Object o) {
-                        //UmengApplication.savePushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN, null);
-                    }
-
-                    @Override
-                    public void error(String s, String s1, Object o) {
-
-                    }
-
-                    @Override
-                    public void notImplemented() {
-
-                    }
-                });
-            }
+//            String token = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN);
+//            if (token != null && !token.equals("")) {
+//                channel.invokeMethod("onToken", token, new Result() {
+//                    @Override
+//                    public void success(Object o) {
+//                        //UmengApplication.savePushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN, null);
+//                    }
+//
+//                    @Override
+//                    public void error(String s, String s1, Object o) {
+//
+//                    }
+//
+//                    @Override
+//                    public void notImplemented() {
+//
+//                    }
+//                });
+//            }
             //查看缓存是否存在Token，存在在回调
             String umsgPushMsg = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_MESSAGE);
             if (umsgPushMsg != null && !umsgPushMsg.equals("")) {
@@ -79,10 +82,26 @@ public class FlutterUmpushPlugin
             }
             result.success(null);
         } else if ("getToken".equals(call.method)) {
-            String token = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN);
-            channel.invokeMethod("onGetToken", token);
+            //添加一个获取Token的方法
+            String useName = call.argument("useName");
+            String umengDeviceToken = UmengApplication.getPushData(registrar.activity(), UmengApplication.UMENG_PUSH_DEVICE_TOKEN);
+            final String  alias = umengDeviceToken + useName;
+            PushAgent mPushAgent = PushAgent.getInstance(registrar.activity());
+            //别名绑定，将某一类型的别名ID绑定至某设备，老的绑定设备信息被覆盖，别名ID和deviceToken是一对一的映射关系
+            mPushAgent.setAlias(alias,"自有id", new UTrack.ICallBack() {
+                @Override
+                public void onMessage(boolean isSuccess, String message) {
+                    if (isSuccess) {
+                        channel.invokeMethod("onGetToken", alias);
+
+                    }else{
+                        Log.e("wilson","设置别名失败");
+                    }
+                }
+            });
+
             result.success(null);
-        } else {
+        }else  {
             result.notImplemented();
         }
     }

@@ -89,9 +89,12 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
         UMConfigure.setLogEnabled(true);
         // 初始化组件化基础库, 统计SDK/推送SDK/分享SDK都必须调用此初始化接口
 
+        String appKey = this.metaValue("UMENG_APPKEY");
         String appSecret = this.metaValue("UMENG_MESSAGE_SECRET");
         // Log.d(TAG, "appSecret: " + appSecret);
-        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, appSecret);
+//        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, appSecret);
+        UMConfigure.init(this, appKey, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, appSecret);
+
         PushAgent pushAgent = PushAgent.getInstance(this);
         pushAgent.setDisplayNotificationNumber(10);
         pushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);
@@ -145,7 +148,7 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
                                            Log.i(TAG, "device token: " + deviceToken);
                                            if (FlutterUmpushPlugin.instance != null) {
                                                //Flutter插件已经初始化完成，可以直接调用
-                                               FlutterUmpushPlugin.instance.channel.invokeMethod("onToken", deviceToken, FLUTTER_METHOD_CALLBACK);
+                                               //FlutterUmpushPlugin.instance.channel.invokeMethod("onToken", deviceToken, FLUTTER_METHOD_CALLBACK);
                                                UmengApplication.savePushData(getApplicationContext(), UMENG_PUSH_DEVICE_TOKEN, deviceToken);
                                            } else { //Flutter尚未初始化（主要原因是使用小米、华为、魅族的离线唤醒方式初始化的，首先执行的的UmengOtherPushActivity）
                                                //缓存
