@@ -1,14 +1,18 @@
 package com.github.flutterumpush;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
@@ -165,5 +169,74 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
         HuaWeiRegister.register(this);
         MeizuRegister.register(this, this.metaValue("MZ_APP_ID"), this.metaValue("MZ_APP_KEY"));
         MiPushRegistar.register(this, this.metaValue("XM_APP_ID"), this.metaValue("XM_APP_KEY"));
+
+
+        registerActivityLifecycleCallbacks(lifecycleCallbacks);
     }
+
+
+    private ActivityLifecycleCallbacks lifecycleCallbacks = new ActivityLifecycleCallbacks() {
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle bundle) {
+            Log.d("wilsonActivity","onActivityCreated");
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            Log.d("wilsonActivity","onActivityStarted");
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            Log.d("wilsonActivity","onActivityResumed");
+
+            //关闭通知
+            PushAgent pushAgent = PushAgent.getInstance(activity);
+            pushAgent.disable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("wilsonActivity","关闭通知");
+
+                }
+                @Override
+                public void onFailure(String s, String s1) {
+                }
+            });
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            //开启通知
+            Log.d("wilsonActivity","onActivityPaused");
+            PushAgent pushAgent = PushAgent.getInstance(activity);
+            pushAgent.enable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("wilsonActivity","开启通知 ");
+                }
+                @Override
+                public void onFailure(String s, String s1) {
+                }
+            });
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            Log.d("wilsonActivity","onActivityStopped");
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+            Log.d("wilsonActivity","onActivitySaveInstanceState");
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            Log.d("wilsonActivity","onActivityDestroyed");
+        }
+    };
+
 }
