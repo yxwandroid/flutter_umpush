@@ -22,5 +22,7 @@ A new flutter plugin project.
   s.dependency 'UMCErrorCatch'
   s.dependency 'UMCSecurityPlugins'
   s.ios.deployment_target = '8.0'
+# 添加静态库引用配置 
+  s.static_framework = true
 end
 

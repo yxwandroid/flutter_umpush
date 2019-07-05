@@ -115,6 +115,8 @@ public class UmengApplication extends io.flutter.app.FlutterApplication {
                 Toast.makeText(context, uMessage.custom, Toast.LENGTH_LONG).show();
             }
         };
+
+        pushAgent.setDisplayNotificationNumber(1);
         pushAgent.setMessageHandler(messageHandler);
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
             public void launchApp(Context context, UMessage uMessage) {
