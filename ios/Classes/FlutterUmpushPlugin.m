@@ -84,7 +84,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [UMConfigure setLogEnabled:YES];
     
     
-    [UMConfigure initWithAppkey:@"5c7cd4830cafb2675e000ed2" channel:@"flutter"];
+    [UMConfigure initWithAppkey:@"你的友盟推送key" channel:@"flutter"];
     [MobClick event:@"flutter_ok"];
     NSLog(@"umeng_push_plugin application init umeng ok");
     UMessageRegisterEntity *entity = [[UMessageRegisterEntity alloc] init];
